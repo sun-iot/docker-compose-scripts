@@ -1,0 +1,105 @@
+version: '3.7'
+services:
+  clickhouse-1:
+    image: clickhouse/clickhouse-server:22.3.3.44
+    container_name: clickhouse-1
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+      - ./config/metrika_1.xml:/etc/clickhouse-server/config.d/metrika.xml
+      - ./config/config.xml:/etc/clickhouse-server/config.xml
+      - ./clickhouse-1/clickhouse_server:/var/lib/clickhouse
+      - ./clickhouse-1/log:/var/log/clickhouse-server
+    ports:
+      - 12021:9363
+      - 12018:9000
+      - 12019:8123
+      - 12020:9009
+      - 8001:8001  
+    environment:
+      CLICKHOUSE_WATCHDOG_ENABLE: 1
+      CLICKHOUSE_SHARD_NUM: 01
+      CLICKHOUSE_NODE_NAME: clickhouse-1
+    depends_on:
+      - clickhouse-zookpper-1
+
+  clickhouse-2:
+    image: clickhouse/clickhouse-server:22.3.3.44
+    container_name: clickhouse-2
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+      - ./config/metrika_2.xml:/etc/clickhouse-server/config.d/metrika.xml
+      - ./config/config.xml:/etc/clickhouse-server/config.xml
+      - ./clickhouse-2/clickhouse_server:/var/lib/clickhouse  
+      - ./clickhouse-2/log:/var/log/clickhouse-server
+    ports:
+      - 12031:9363
+      - 12032:9000
+      - 12033:8123
+      - 12034:9009
+    environment:
+      CLICKHOUSE_WATCHDOG_ENABLE: 1
+      CLICKHOUSE_SHARD_NUM: 01
+      CLICKHOUSE_NODE_NAME: clickhouse-2
+    depends_on:
+      - clickhouse-zookpper-1
+
+  clickhouse-3:
+      image: clickhouse/clickhouse-server:22.3.3.44
+      container_name: clickhouse-3
+      ulimits:
+        nofile:
+          soft: 262144
+          hard: 262144
+      volumes:
+        - ./config/metrika_3.xml:/etc/clickhouse-server/config.d/metrika.xml
+        - ./config/config.xml:/etc/clickhouse-server/config.xml
+        - ./clickhouse-3/clickhouse_server:/var/lib/clickhouse
+        - ./clickhouse-3/log:/var/log/clickhouse-server
+      ports:
+        - 12041:9363
+        - 12042:9000
+        - 12043:8123
+        - 12044:9009
+      environment:
+        CLICKHOUSE_WATCHDOG_ENABLE: 1
+        CLICKHOUSE_SHARD_NUM: 02
+        CLICKHOUSE_NODE_NAME: clickhouse-3
+      depends_on:
+        - clickhouse-zookpper-1
+
+  clickhouse-4:
+      image: clickhouse/clickhouse-server:22.3.3.44
+      container_name: clickhouse-4
+      ulimits:
+        nofile:
+          soft: 262144
+          hard: 262144
+      volumes:
+        - ./config/metrika_4.xml:/etc/clickhouse-server/config.d/metrika.xml
+        - ./config/config.xml:/etc/clickhouse-server/config.xml
+        - ./clickhouse-4/clickhouse_server:/var/lib/clickhouse
+        - ./clickhouse-4/log:/var/log/clickhouse-server
+      ports:
+        - 12051:9363
+        - 12052:9000
+        - 12053:8123
+        - 12054:9009
+      environment:
+        CLICKHOUSE_WATCHDOG_ENABLE: 1
+        CLICKHOUSE_SHARD_NUM: 02
+        CLICKHOUSE_NODE_NAME: clickhouse-4
+      depends_on:
+        - clickhouse-zookpper-1
+
+  clickhouse-zookpper-1:
+      image: zookeeper
+      restart: always
+      container_name: clickhouse-zookpper-1
+      ports:
+        - 2181:2181
