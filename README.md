@@ -1,2 +1,5 @@
-# docker-compose-scripts
-Docker
+# 基于Docker的部署脚本
+
++ StarRocks
++ Doris
++ Clickhouse
