@@ -3,3 +3,10 @@
 + StarRocks
 + Doris
 + Clickhouse
++ Hadoop
++ Flink
++ Spark
++ Hive
++ Kafka
++ Zookeeper
++ Elasticsearch
